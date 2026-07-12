@@ -1,8 +1,9 @@
-import { Router, Request, Response } from 'express';
+import express from 'express';
+import type { Request, Response } from 'express';
 import { PrismaClient } from '@prisma/client';
-import { StateMachineService } from '../services/stateMachine';
+import { StateMachineService } from '../services/stateMachine.js'; // Note the .js extension!
 
-const router = Router();
+const router = express.Router();
 const prisma = new PrismaClient();
 
 // Create Trip (Draft)
