@@ -1,6 +1,7 @@
 import type { DriverStatus } from "@prisma/client";
 import { prisma } from "../lib/prisma.js";
 import { AppError } from "../utils/AppError.js";
+import { validateDriverStatusTransition, validateDriverLicense } from "../utils/businessRules.js";
 
 interface CreateDriverParams {
   name: string;
@@ -51,6 +52,8 @@ export class DriverService {
     const existing = await prisma.driver.findUnique({
       where: { licenseNumber: params.licenseNumber },
     });
+
+    validateDriverLicense(params.licenseExpiry);
 
     if (existing) {
       throw new AppError(
@@ -145,9 +148,12 @@ export class DriverService {
       throw new AppError("Driver not found.", 404);
     }
 
-    // Business Rule: Suspended drivers cannot be updated to ON_TRIP
-    if (driver.status === "SUSPENDED" && params.status === "ON_TRIP") {
-      throw new AppError("Cannot change status to ON_TRIP for a suspended driver.", 400);
+    if (params.status && params.status !== driver.status) {
+      validateDriverStatusTransition(driver.status, params.status);
+    }
+
+    if (params.licenseExpiry) {
+      validateDriverLicense(params.licenseExpiry);
     }
 
     // Check uniqueness only if licenseNumber is changing
