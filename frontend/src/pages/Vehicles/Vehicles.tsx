@@ -10,8 +10,10 @@ import {
   Route,
   Wrench,
 } from "lucide-react";
+import { useEffect, useState } from "react";
+import type { Vehicle } from "../../types/vehicle";
 
-const vehicles = [
+const mockVehicles = [
   {
     regNo: "MP20AB1234",
     name: "Truck-12",
@@ -47,6 +49,12 @@ function badge(status: string) {
 }
 
 function Vehicles() {
+    const [vehicles, setVehicles] = useState<Vehicle[]>([]);
+
+    useEffect(() => {
+  // TODO: Replace with API call when backend is ready
+  setVehicles(mockVehicles);
+}, []);
   return (
     <DashboardLayout>
       <div className="space-y-6">

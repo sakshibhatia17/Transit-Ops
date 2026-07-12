@@ -10,8 +10,10 @@ import {
   Route,
   UserX,
 } from "lucide-react";
+import { useEffect, useState } from "react";
+import type { Driver } from "../../types/driver";
 
-const drivers = [
+const mockDrivers = [
   {
     name: "Alex Johnson",
     license: "DL04AB1234",
@@ -47,6 +49,12 @@ function badge(status: string) {
 }
 
 function Drivers() {
+    const [drivers, setDrivers] = useState<Driver[]>([]);
+
+    useEffect(() => {
+  // TODO: Replace with API call when backend is ready
+  setDrivers(mockDrivers);
+}, []);
   return (
     <DashboardLayout>
       <div className="space-y-6">

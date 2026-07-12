@@ -1,6 +1,19 @@
-import { Bell, Search, UserCircle2 } from "lucide-react";
+import {
+  Bell,
+  Search,
+  UserCircle2,
+  LogOut,
+} from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 function Navbar() {
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    navigate("/");
+  };
+
   return (
     <header className="h-16 bg-white border-b flex items-center justify-between px-6 sticky top-0 z-50">
       <div className="relative w-80">
@@ -16,13 +29,24 @@ function Navbar() {
         />
       </div>
 
-      <div className="flex items-center gap-4">
-        <Bell className="text-slate-600 cursor-pointer" />
+      <div className="flex items-center gap-5">
+        <Bell
+          className="text-slate-600 cursor-pointer"
+          size={20}
+        />
 
         <div className="flex items-center gap-2">
           <UserCircle2 size={34} className="text-[#22577A]" />
           <span className="font-medium">Admin</span>
         </div>
+
+        <button
+          onClick={handleLogout}
+          className="flex items-center gap-2 text-red-500 hover:text-red-600 transition"
+        >
+          <LogOut size={18} />
+          <span>Logout</span>
+        </button>
       </div>
     </header>
   );
