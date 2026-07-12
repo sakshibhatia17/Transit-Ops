@@ -8,6 +8,7 @@ import { errorHandler } from "./middleware/errorHandler.js";
 import authRoutes from "./routes/auth.routes.js";
 import vehicleRoutes from "./routes/vehicle.routes.js";
 import driverRoutes from "./routes/driver.routes.js";
+import dashboardRoutes from "./routes/dashboard.routes.js";
 
 const app = express();
 
@@ -44,6 +45,7 @@ app.get("/api/health", (_req, res) => {
 app.use("/api/auth", authRoutes);
 app.use("/api/vehicles", vehicleRoutes);
 app.use("/api/drivers", driverRoutes);
+app.use("/api/dashboard", dashboardRoutes);
 
 // ─── 404 Handler ────────────────────────────────────────────────────────────────
 app.all("{*path}", (req, res) => {
