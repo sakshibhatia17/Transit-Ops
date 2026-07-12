@@ -21,7 +21,8 @@ router.post('/maintenance', async (req: Request, res: Response) => {
 router.patch('/maintenance/:id/close', async (req: Request, res: Response) => {
   try {
     const { finalCost } = req.body;
-    const closedLog = await StateMachineService.closeMaintenance(req.params.id, Number(finalCost));
+    // Explicitly cast req.params.id to a string string
+    const closedLog = await StateMachineService.closeMaintenance(String(req.params.id), Number(finalCost));
     res.json(closedLog);
   } catch (error: any) {
     res.status(400).json({ error: error.message });

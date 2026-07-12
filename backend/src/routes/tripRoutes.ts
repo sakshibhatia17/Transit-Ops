@@ -1,7 +1,7 @@
 import express from 'express';
 import type { Request, Response } from 'express';
 import { PrismaClient } from '@prisma/client';
-import { StateMachineService } from '../services/stateMachine.js'; // Note the .js extension!
+import { StateMachineService } from '../services/stateMachine.js';
 
 const router = express.Router();
 const prisma = new PrismaClient();
@@ -32,7 +32,7 @@ router.get('/', async (_req: Request, res: Response) => {
 // Dispatch Trip
 router.post('/:id/dispatch', async (req: Request, res: Response) => {
   try {
-    const updatedTrip = await StateMachineService.dispatchTrip(req.params.id);
+    const updatedTrip = await StateMachineService.dispatchTrip(req.params.id as string);
     res.json(updatedTrip);
   } catch (error: any) {
     res.status(400).json({ error: error.message });
@@ -43,7 +43,7 @@ router.post('/:id/dispatch', async (req: Request, res: Response) => {
 router.post('/:id/complete', async (req: Request, res: Response) => {
   try {
     const { finalOdometer, fuelConsumed } = req.body;
-    const completedTrip = await StateMachineService.completeTrip(req.params.id, Number(finalOdometer), Number(fuelConsumed));
+    const completedTrip = await StateMachineService.completeTrip(req.params.id as string, Number(finalOdometer), Number(fuelConsumed));
     res.json(completedTrip);
   } catch (error: any) {
     res.status(400).json({ error: error.message });
@@ -53,7 +53,7 @@ router.post('/:id/complete', async (req: Request, res: Response) => {
 // Cancel Trip
 router.post('/:id/cancel', async (req: Request, res: Response) => {
   try {
-    const cancelledTrip = await StateMachineService.cancelTrip(req.params.id);
+    const cancelledTrip = await StateMachineService.cancelTrip(req.params.id as string);
     res.json(cancelledTrip);
   } catch (error: any) {
     res.status(400).json({ error: error.message });
