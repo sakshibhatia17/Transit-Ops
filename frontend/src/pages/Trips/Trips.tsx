@@ -14,7 +14,7 @@ function Trips() {
             Trip Management
           </h1>
 
-          <p className="text-slate-500">
+          <p className="text-slate-500 dark:text-slate-400">
             Create, dispatch and monitor fleet trips.
           </p>
         </div>

@@ -1,6 +1,6 @@
 function ValidationCard() {
   return (
-    <div className="bg-white rounded-xl shadow p-6">
+    <div className="bg-white dark:bg-slate-900 rounded-xl shadow transition-colors p-6">
       <h2 className="text-xl font-semibold mb-4">
         Dispatch Validation
       </h2>

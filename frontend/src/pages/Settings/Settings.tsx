@@ -7,12 +7,12 @@ function Settings() {
 
         <div>
           <h1 className="text-3xl font-bold">Settings</h1>
-          <p className="text-slate-500">
+          <p className="text-slate-500 dark:text-slate-400">
             Configure your organization preferences.
           </p>
         </div>
 
-        <div className="bg-white rounded-xl shadow p-6 space-y-6">
+        <div className="bg-white dark:bg-slate-900 rounded-xl shadow transition-colors p-6 space-y-6">
 
           <div>
             <label className="block mb-2 font-medium">
