@@ -1,0 +1,27 @@
+# Python
+venv/
+__pycache__/
+*.pyc
+.env
+
+# FastAPI
+*.sqlite3
+
+# Node
+node_modules/
+dist/
+build/
+
+# VS Code
+.vscode/
+
+# Mac
+.DS_Store
+
+# Logs
+*.log
+
+# Environment
+.env.local
+.env.production
+.env.development
