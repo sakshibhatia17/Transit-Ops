@@ -17,8 +17,8 @@ const [loading, setLoading] = useState(false);
     localStorage.setItem("token", response.data.token);
 
     navigate("/dashboard");
-  } catch (error) {
-    alert("Invalid email or password");
+  } catch (error: any) {
+    alert(error.message || "Login failed");
     console.error(error);
   } finally {
     setLoading(false);
