@@ -7,7 +7,7 @@ type DashboardLayoutProps = {
 
 function DashboardLayout({ children }: DashboardLayoutProps) {
   return (
-    <div className="bg-slate-100 min-h-screen">
+    <div className="bg-slate-100 dark:bg-slate-950 min-h-screen transition-colors">
       {/* Fixed Sidebar */}
       <div className="fixed left-0 top-0 h-screen w-64">
         <Sidebar />
@@ -22,7 +22,7 @@ function DashboardLayout({ children }: DashboardLayoutProps) {
 
         {/* Scrollable Content */}
         <main
-          className="flex-1 p-6 overflow-y-auto"
+          className="flex-1 p-6 overflow-y-auto text-slate-900 dark:text-white transition-colors"
           style={{ height: "calc(100vh - 64px)" }}
         >
           {children}

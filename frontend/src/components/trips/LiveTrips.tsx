@@ -23,7 +23,7 @@ const trips = [
 
 function LiveTrips() {
   return (
-    <div className="bg-white rounded-xl shadow p-6">
+    <div className="bg-white dark:bg-slate-900 rounded-xl shadow transition-colors p-6">
       <h2 className="text-xl font-semibold mb-5">
         Live Trips
       </h2>
@@ -36,10 +36,10 @@ function LiveTrips() {
           >
             <div>
               <h3 className="font-semibold">{trip.id}</h3>
-              <p className="text-sm text-slate-500">
+              <p className="text-sm text-slate-500 dark:text-slate-400">
                 {trip.vehicle}
               </p>
-              <p className="text-sm text-slate-500">
+              <p className="text-sm text-slate-500 dark:text-slate-400">
                 {trip.driver}
               </p>
             </div>

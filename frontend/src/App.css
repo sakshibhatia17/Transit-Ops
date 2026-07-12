@@ -72,7 +72,7 @@
 
 #next-steps {
   display: flex;
-  border-top: 1px solid var(--border);
+  border-t border-slate-200 dark:border-slate-700op: 1px solid var(--border);
   text-align: left;
 
   & > div {
@@ -155,7 +155,7 @@
 
 #spacer {
   height: 88px;
-  border-top: 1px solid var(--border);
+  border-t border-slate-200 dark:border-slate-700op: 1px solid var(--border);
   @media (max-width: 1024px) {
     height: 48px;
   }

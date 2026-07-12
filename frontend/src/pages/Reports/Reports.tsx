@@ -50,7 +50,7 @@ function Reports() {
           <h1 className="text-3xl font-bold">
             Reports & Analytics
           </h1>
-          <p className="text-slate-500">
+          <p className="text-slate-500 dark:text-slate-400">
             Fleet insights and operational analytics.
           </p>
         </div>
@@ -89,7 +89,7 @@ function Reports() {
 
         <div className="grid lg:grid-cols-2 gap-6">
 
-          <div className="bg-white rounded-xl shadow p-5">
+          <div className="bg-white dark:bg-slate-900 rounded-xl shadow transition-colors p-5">
             <h2 className="font-semibold mb-4">
               Monthly Fuel Cost
             </h2>
@@ -109,7 +109,7 @@ function Reports() {
             </ResponsiveContainer>
           </div>
 
-          <div className="bg-white rounded-xl shadow p-5">
+          <div className="bg-white dark:bg-slate-900 rounded-xl shadow transition-colors p-5">
             <h2 className="font-semibold mb-4">
               Trips Per Day
             </h2>
@@ -127,7 +127,7 @@ function Reports() {
 
         </div>
 
-        <div className="bg-white rounded-xl shadow p-5">
+        <div className="bg-white dark:bg-slate-900 rounded-xl shadow transition-colors p-5">
 
           <h2 className="font-semibold mb-4">
             Vehicle Status
@@ -170,13 +170,13 @@ function Card({
   border,
 }: any) {
   return (
-    <div className={`bg-white rounded-xl shadow p-5 border-l-4 ${border}`}>
+    <div className={`bg-white dark:bg-slate-900 rounded-xl shadow transition-colors p-5 border-l-4 ${border}`}>
       <div className="flex justify-between">
         <div className="text-[#22577A]">{icon}</div>
         <span className="text-3xl font-bold">{value}</span>
       </div>
 
-      <p className="mt-3 text-slate-500">
+      <p className="mt-3 text-slate-500 dark:text-slate-400">
         {title}
       </p>
     </div>

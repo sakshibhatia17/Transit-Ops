@@ -7,7 +7,7 @@ function TripLifecycle() {
   ];
 
   return (
-    <div className="bg-white rounded-xl shadow p-5 mb-6">
+    <div className="bg-white dark:bg-slate-900 rounded-xl shadow transition-colors p-5 mb-6">
       <h2 className="text-lg font-semibold mb-6">
         Trip Lifecycle
       </h2>

@@ -62,7 +62,7 @@ function Vehicles() {
         <div className="flex justify-between items-center">
           <div>
             <h1 className="text-3xl font-bold">Vehicle Management</h1>
-            <p className="text-slate-500">Monitor and manage your fleet.</p>
+            <p className="text-slate-500 dark:text-slate-400">Monitor and manage your fleet.</p>
           </div>
 
           <button className="flex items-center gap-2 bg-[#22577A] text-white px-5 py-2 rounded-lg hover:bg-[#1A4761]">
@@ -97,7 +97,7 @@ function Vehicles() {
           ].map(({ title, value, icon: Icon }, index) => (
             <div
               key={title}
-              className={`bg-white rounded-xl shadow p-5 border-l-4 ${
+              className={`bg-white dark:bg-slate-900 rounded-xl shadow transition-colors p-5 border-l-4 ${
                 index === 0
                   ? "border-blue-500"
                   : index === 1
@@ -112,13 +112,13 @@ function Vehicles() {
                 <span className="text-3xl font-bold">{value}</span>
               </div>
 
-              <p className="mt-3 text-slate-500">{title}</p>
+              <p className="mt-3 text-slate-500 dark:text-slate-400">{title}</p>
             </div>
           ))}
         </div>
 
         {/* Search */}
-        <div className="bg-white rounded-xl shadow p-4 flex gap-4">
+        <div className="bg-white dark:bg-slate-900 rounded-xl shadow transition-colors p-4 flex gap-4">
           <div className="relative flex-1">
             <Search
               size={18}
@@ -141,10 +141,10 @@ function Vehicles() {
         </div>
 
         {/* Table */}
-        <div className="bg-white rounded-xl shadow">
+        <div className="bg-white dark:bg-slate-900 rounded-xl shadow transition-colors">
           <div className="overflow-x-auto">
             <table className="w-full">
-              <thead className="bg-slate-50">
+              <thead className="bg-slate-50 dark:bg-slate-800">
                 <tr>
                   <th className="text-left p-4">Registration</th>
                   <th className="text-left">Vehicle</th>
@@ -159,7 +159,7 @@ function Vehicles() {
                 {vehicles.map((vehicle) => (
                   <tr
                     key={vehicle.regNo}
-                    className="border-t hover:bg-slate-50 transition-colors"
+                    className="border-t border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 dark:bg-slate-800 transition-colors"
                   >
                     <td className="p-4">{vehicle.regNo}</td>
                     <td>{vehicle.name}</td>
@@ -179,11 +179,11 @@ function Vehicles() {
                     <td>
                       <div className="flex justify-center items-center gap-3">
                         <button className="p-2 rounded-full hover:bg-slate-100 transition">
-                          <Eye size={18} className="text-slate-500" />
+                          <Eye size={18} className="text-slate-500 dark:text-slate-400" />
                         </button>
 
                         <button className="p-2 rounded-full hover:bg-slate-100 transition">
-                          <Pencil size={18} className="text-slate-500" />
+                          <Pencil size={18} className="text-slate-500 dark:text-slate-400" />
                         </button>
 
                         <button className="p-2 rounded-full text-red-500 hover:bg-red-50 transition focus:outline-none">
@@ -197,8 +197,8 @@ function Vehicles() {
             </table>
           </div>
 
-          <div className="flex justify-between items-center border-t p-4">
-            <p className="text-sm text-slate-500">Showing 1–3 of 3 vehicles</p>
+          <div className="flex justify-between items-center border-t border-slate-200 dark:border-slate-700 p-4">
+            <p className="text-sm text-slate-500 dark:text-slate-400">Showing 1–3 of 3 vehicles</p>
 
             <div className="flex gap-2">
               <button className="border rounded-lg px-4 py-2 hover:bg-slate-100">
