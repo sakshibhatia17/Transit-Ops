@@ -57,3 +57,23 @@ def dispatch_trip(id: int):
     # Process transition through the central state machine service
     updated_trip = StateMachineService.dispatch_trip(trip)
     return updated_trip
+
+@router.post("/{id}/complete", response_model=TripResponse)
+def complete_trip(id: int, final_odometer: float, fuel_consumed: float):
+    global MOCK_TRIPS_DB
+    trip = next((t for t in MOCK_TRIPS_DB if t["id"] == id), None)
+    if not trip:
+        raise HTTPException(status_code=404, detail="Trip not found")
+        
+    updated_trip = StateMachineService.complete_trip(trip, final_odometer, fuel_consumed)
+    return updated_trip
+
+@router.post("/{id}/cancel", response_model=TripResponse)
+def cancel_trip(id: int):
+    global MOCK_TRIPS_DB
+    trip = next((t for t in MOCK_TRIPS_DB if t["id"] == id), None)
+    if not trip:
+        raise HTTPException(status_code=404, detail="Trip not found")
+        
+    updated_trip = StateMachineService.cancel_trip(trip)
+    return updated_trip

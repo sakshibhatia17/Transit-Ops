@@ -57,3 +57,69 @@ class StateMachineService:
         driver["status"] = "On Trip"
 
         return trip
+    
+    @staticmethod
+    def complete_trip(trip: dict, final_odometer: float, fuel_consumed: float) -> dict:
+        """
+        Transitions a trip from Dispatched to Completed. 
+        Releases the vehicle and driver back to Available.
+        """
+        if trip["status"] != TripStatus.DISPATCHED:
+            raise HTTPException(
+                status_code=400,
+                detail=f"Cannot complete a trip that is currently '{trip['status']}'. Must be Dispatched."
+            )
+            
+        # Complete the business cycle
+        trip["status"] = TripStatus.COMPLETED
+        trip["final_odometer"] = final_odometer
+        trip["fuel_consumed"] = fuel_consumed
+        
+        # Real-world status reset (mocked states)
+        # vehicle["status"] = "Available"
+        # driver["status"] = "Available"
+        return trip
+
+    @staticmethod
+    def cancel_trip(trip: dict) -> dict:
+        """
+        Transitions a active or draft trip to Cancelled.
+        Releases associated resources immediately.
+        """
+        if trip["status"] in [TripStatus.COMPLETED, TripStatus.CANCELLED]:
+            raise HTTPException(
+                status_code=400,
+                detail=f"Cannot cancel a trip that is already {trip['status']}."
+            )
+            
+        trip["status"] = TripStatus.CANCELLED
+        # Real-world status reset (mocked states)
+        # vehicle["status"] = "Available"
+        # driver["status"] = "Available"
+        return trip
+    
+    @staticmethod
+    def start_maintenance(maintenance_record: dict) -> dict:
+        """
+        Transitions a vehicle status from Available to In Shop.
+        """
+        # vehicle = mock_get_vehicle(maintenance_record["vehicle_id"])
+        # if vehicle["status"] != "Available":
+        #     raise HTTPException(status_code=400, detail="Vehicle must be Available to enter maintenance.")
+        
+        maintenance_record["status"] = "Open"
+        # vehicle["status"] = "In Shop"
+        return maintenance_record
+
+    @staticmethod
+    def close_maintenance(maintenance_record: dict, final_cost: float) -> dict:
+        """
+        Closes maintenance ticket and restores vehicle back to Available status.
+        """
+        if maintenance_record["status"] != "Open":
+            raise HTTPException(status_code=400, detail="Maintenance ticket is already closed.")
+            
+        maintenance_record["status"] = "Closed"
+        maintenance_record["cost"] = final_cost
+        # vehicle["status"] = "Available"
+        return maintenance_record
