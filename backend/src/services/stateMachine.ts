@@ -1,4 +1,6 @@
 import { PrismaClient, TripStatus, VehicleStatus, DriverStatus } from '@prisma/client';
+import { AppError } from '../utils/AppError.js';
+import { validateVehicleDispatch, validateDriverAssignment } from '../utils/businessRules.js';
 
 const prisma = new PrismaClient();
 
@@ -14,31 +16,19 @@ export class StateMachineService {
         include: { vehicle: true, driver: true },
       });
 
-      if (!trip) throw new Error('Trip not found');
+      if (!trip) throw new AppError('Trip not found', 404);
       if (trip.status !== TripStatus.DRAFT) {
-        throw new Error(`Cannot dispatch trip in '${trip.status}' status. Must be DRAFT.`);
+        throw new AppError(`Cannot dispatch trip in '${trip.status}' status. Must be DRAFT.`, 400);
       }
 
       const { vehicle, driver } = trip;
 
       // 2. Hackathon Business Validation Checks
-      if (vehicle.status === VehicleStatus.RETIRED) {
-        throw new Error('Vehicle is retired.');
-      }
-      if (vehicle.status === VehicleStatus.IN_SHOP) {
-        throw new Error('Vehicle is currently undergoing maintenance in the shop.');
-      }
-      if (vehicle.status !== VehicleStatus.AVAILABLE) {
-        throw new Error('Vehicle is already assigned to another active trip.');
-      }
-      if (driver.status !== DriverStatus.AVAILABLE) {
-        throw new Error('Driver is not currently available.');
-      }
-      if (new Date(driver.licenseExpiry) < new Date()) {
-        throw new Error('Driver cannot be dispatched; operating license has expired.');
-      }
+      validateVehicleDispatch(vehicle.status);
+      validateDriverAssignment(driver.status, driver.licenseExpiry);
+
       if (trip.cargoWeight > vehicle.maxLoadCapacity) {
-        throw new Error(`Cargo weight (${trip.cargoWeight}kg) exceeds vehicle capacity limit (${vehicle.maxLoadCapacity}kg).`);
+        throw new AppError(`Cargo weight (${trip.cargoWeight}kg) exceeds vehicle capacity limit (${vehicle.maxLoadCapacity}kg).`, 400);
       }
 
       // 3. Atomic State Updates
@@ -66,7 +56,7 @@ export class StateMachineService {
     return await prisma.$transaction(async (tx) => {
       const trip = await tx.trip.findUnique({ where: { id: tripId } });
       if (!trip || trip.status !== TripStatus.DISPATCHED) {
-        throw new Error('Trip must be in DISPATCHED status to complete.');
+        throw new AppError('Trip must be in DISPATCHED status to complete.', 400);
       }
 
       // Release resources back to pool
@@ -100,7 +90,7 @@ export class StateMachineService {
     return await prisma.$transaction(async (tx) => {
       const trip = await tx.trip.findUnique({ where: { id: tripId } });
       if (!trip || trip.status === TripStatus.COMPLETED || trip.status === TripStatus.CANCELLED) {
-        throw new Error('Cannot cancel a completed or already cancelled trip.');
+        throw new AppError('Cannot cancel a completed or already cancelled trip.', 400);
       }
 
       // Reset vehicle and driver back to available if they were dispatched
@@ -147,7 +137,7 @@ export class StateMachineService {
   static async closeMaintenance(logId: string, finalCost: number) {
     return await prisma.$transaction(async (tx) => {
       const log = await tx.maintenanceLog.findUnique({ where: { id: logId } });
-      if (!log) throw new Error('Maintenance entry not found');
+      if (!log) throw new AppError('Maintenance entry not found', 404);
 
       await tx.vehicle.update({
         where: { id: log.vehicleId },

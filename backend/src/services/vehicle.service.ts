@@ -1,6 +1,7 @@
 import type { VehicleStatus } from "@prisma/client";
 import { prisma } from "../lib/prisma.js";
 import { AppError } from "../utils/AppError.js";
+import { validateVehicleStatusTransition } from "../utils/businessRules.js";
 
 interface CreateVehicleParams {
   registrationNo: string;
@@ -148,6 +149,10 @@ export class VehicleService {
 
     if (!vehicle) {
       throw new AppError("Vehicle not found.", 404);
+    }
+
+    if (params.status && params.status !== vehicle.status) {
+      validateVehicleStatusTransition(vehicle.status, params.status);
     }
 
     // Check uniqueness only if registrationNo is changing
