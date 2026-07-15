@@ -13,11 +13,15 @@ const [loading, setLoading] = useState(false);
     setLoading(true);
 
     const response = await login(email, password);
+    console.log("LOGIN RESPONSE:", response.data);
 
-const { token, data } = response.data;
+const { token, user } = response.data.data;
 
 localStorage.setItem("token", token);
-localStorage.setItem("user", JSON.stringify(data.user));
+localStorage.setItem("user", JSON.stringify(user));
+
+console.log("TOKEN:", token);
+console.log("USER:", user);
 
 navigate("/dashboard");
   } catch (error) {
