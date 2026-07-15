@@ -1,47 +1,138 @@
-# 🚍 TransitOps
+# 🚍 TransitOps – Smart Fleet & Transit Operations Platform
 
-TransitOps is a modern fleet and transit operations management platform designed to simplify vehicle, driver, trip, maintenance, and fuel management through a centralized dashboard.
+> A full-stack fleet management platform built during a hackathon to streamline vehicle operations, driver management, fleet monitoring, and operational analytics through a modern web dashboard.
 
-Built with React, TypeScript, Node.js, Express, Prisma, and PostgreSQL, the application provides an intuitive interface for managing daily transport operations.
+![React](https://img.shields.io/badge/React-19-61DAFB?logo=react)
+![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?logo=typescript)
+![Node.js](https://img.shields.io/badge/Node.js-339933?logo=node.js)
+![Express](https://img.shields.io/badge/Express-000000?logo=express)
+![Prisma](https://img.shields.io/badge/Prisma-2D3748?logo=prisma)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-4169E1?logo=postgresql)
+![Render](https://img.shields.io/badge/Render-Deployed-46E3B7)
+![Vercel](https://img.shields.io/badge/Vercel-Deployed-000000)
 
 ---
 
-## ✨ Features
+# 📖 Overview
 
-### Authentication
-- Login page
-- Protected routes
-- JWT-ready authentication flow
-- Logout functionality
+TransitOps is a centralized fleet management solution that helps transport operators manage vehicles, drivers, trips, maintenance activities, operational analytics, and secure access control from a single dashboard.
 
-### Dashboard
-- Fleet overview cards
-- Operational summary
-- Analytics widgets
-- Responsive dashboard layout
+The project was developed as a hackathon prototype with a scalable backend architecture and a modern responsive frontend.
 
-### Fleet Management
-- Vehicle management page
-- Driver management page
-- Search interface
-- Status indicators
-- Fleet summary cards
+---
 
-### Operations
-- Trip management UI
-- Maintenance management UI
-- Fuel & Expense management UI
-- Reports page
-- Settings page
+# ✨ Current Features
 
-### UI/UX
-- Responsive layout
-- Sidebar navigation
-- Sticky navbar
-- Theme toggle infrastructure
-- Loading state support
-- Consistent design system
-- Lucide icon integration
+## 🔐 Authentication
+
+- Secure Login
+- JWT Authentication
+- Password Hashing (BCrypt)
+- Role-Based Access Control
+- Protected Routes
+- Authentication-ready frontend integration
+
+### Supported Roles
+
+- Admin
+- Fleet Manager
+- Financial Analyst
+
+---
+
+## 📊 Dashboard
+
+- Fleet Overview
+- Driver Overview
+- Vehicle Status Summary
+- Operational Statistics Cards
+- Analytics Dashboard Layout
+- Responsive Design
+
+---
+
+## 🚗 Vehicle Management
+
+- Vehicle Listing
+- Fleet Summary Cards
+- Vehicle Status Indicators
+- Search Interface
+- CRUD-ready UI
+- Backend CRUD APIs
+
+---
+
+## 👨‍✈️ Driver Management
+
+- Driver Listing
+- Driver Status Overview
+- Experience Information
+- Search Interface
+- CRUD-ready UI
+- Backend CRUD APIs
+
+---
+
+## 🚚 Fleet Operations
+
+- Fleet Operations APIs
+- Business Rule Validation
+- Dispatch Validation
+- Status Management
+
+---
+
+## 🔧 Maintenance
+
+- Maintenance Dashboard
+- Maintenance Management UI
+- Service Tracking Interface
+
+---
+
+## ⛽ Fuel & Expenses
+
+- Fuel Management Interface
+- Expense Tracking Dashboard
+
+---
+
+## 📈 Reports
+
+- Reports Dashboard
+- Analytics Layout
+- Data Visualization Ready
+
+---
+
+## 🎨 User Experience
+
+- Responsive Design
+- Sidebar Navigation
+- Navbar
+- Theme Toggle Infrastructure
+- Loading States
+- Error Handling
+- Consistent Design System
+
+---
+
+# 🧠 Business Rules Engine
+
+TransitOps includes centralized validation logic for enforcing operational rules.
+
+### Vehicle Rules
+
+- Unique Registration Number
+- Vehicle Status Validation
+- Dispatch Eligibility
+- Maintenance Restrictions
+
+### Driver Rules
+
+- License Validation
+- Driver Assignment Validation
+- Status Validation
 
 ---
 
@@ -57,59 +148,140 @@ Built with React, TypeScript, Node.js, Express, Prisma, and PostgreSQL, the appl
 - Axios
 - Lucide React
 
+---
+
 ## Backend
 
 - Node.js
 - Express.js
 - TypeScript
 - Prisma ORM
-- PostgreSQL (Neon)
-- JWT Authentication
-- bcrypt
+- PostgreSQL
+- JWT
+- BCrypt
+- Zod
 
 ---
 
-# 📁 Project Structure
+## Database
 
-```
-Transit-Ops
+- Neon PostgreSQL
+
+---
+
+## Deployment
+
+- Frontend → Vercel
+- Backend → Render
+- Database → Neon
+
+---
+
+# 📂 Project Structure
+
+```text
+TransitOps
 │
 ├── frontend
-│   ├── src
-│   │   ├── api
-│   │   ├── components
-│   │   ├── context
-│   │   ├── layouts
-│   │   ├── pages
-│   │   ├── routes
-│   │   ├── types
-│   │   └── utils
-│   │
-│   └── public
+│   ├── api
+│   ├── components
+│   ├── context
+│   ├── layouts
+│   ├── pages
+│   ├── routes
+│   ├── types
+│   └── utils
 │
 └── backend
     ├── prisma
-    ├── src
-    ├── middleware
     ├── controllers
-    ├── services
+    ├── middleware
     ├── routes
+    ├── services
+    ├── validators
     └── utils
 ```
 
 ---
 
+# 🔐 Authentication Flow
+
+```
+Login
+   │
+   ▼
+JWT Generated
+   │
+   ▼
+Stored in Browser
+   │
+   ▼
+Bearer Token
+   │
+   ▼
+Protected APIs
+```
+
+---
+
+# 📡 API Overview
+
+### Authentication
+
+- POST `/api/auth/register`
+- POST `/api/auth/login`
+- GET `/api/auth/me`
+
+### Dashboard
+
+- GET `/api/dashboard/stats`
+
+### Vehicles
+
+- Create Vehicle
+- Get Vehicles
+- Update Vehicle
+- Delete Vehicle
+
+### Drivers
+
+- Create Driver
+- Get Drivers
+- Update Driver
+- Delete Driver
+
+---
+
+# 🧪 Demo Credentials
+
+| Role | Email | Password |
+|------|-------|----------|
+| **Admin** | `sakshi@test.com` | `Password@123` |
+
+> **Note:** This hackathon prototype includes a pre-configured Admin account for demonstration purposes. The current frontend exposes the login flow only.
+
+---
+
 # 🚀 Getting Started
 
-## Clone Repository
+## Clone
 
 ```bash
 git clone https://github.com/sakshibhatia17/Transit-Ops.git
 ```
 
----
+### Backend
 
-## Frontend
+```bash
+cd backend
+npm install
+
+npx prisma generate
+
+npm run dev
+```
+
+### Frontend
 
 ```bash
 cd frontend
@@ -121,77 +293,45 @@ npm run dev
 
 ---
 
-## Backend
+# 🔮 Roadmap
 
-```bash
-cd backend
+The following features are planned as future enhancements:
 
-npm install
-
-npm run dev
-```
-
----
-
-# 📸 Available Modules
-
-- Dashboard
-- Login
-- Vehicles
-- Drivers
-- Trips
-- Maintenance
-- Fuel & Expenses
-- Reports
-- Settings
-
----
-
-# 🔒 Authentication
-
-The application is designed with JWT-based authentication and protected routes to restrict access to authorized users.
-
----
-
-# 📊 Dashboard Overview
-
-The dashboard provides a quick overview of transport operations through:
-
-- Fleet Summary
-- Vehicle Status
-- Driver Status
-- Operational Statistics
-- Analytics Widgets
-
----
-
-# 🌐 Deployment
-
-| Service | Platform |
-|----------|----------|
-| Frontend | Render |
-| Backend | Render |
-| Database | Neon PostgreSQL |
-
----
-
-# 🔮 Upcoming Improvements
-
-- Backend API integration
-- Live dashboard analytics
-- CRUD operations
-- Search & filtering with backend
-- Role-based access enhancements
-- Data visualization improvements
+- ✅ Live frontend-backend API integration
+- 🚛 Complete Trip Management
+- 📍 Live GPS Vehicle Tracking
+- ⛽ Advanced Fuel Analytics
+- 🔧 Predictive Maintenance Scheduling
+- 📊 Advanced Reports & Charts
+- 🔔 Real-time Notifications
+- 📱 Mobile Responsive PWA
+- 🤖 AI-powered Route Optimization
+- 📈 Fleet Performance Forecasting
 
 ---
 
 # 👥 Team
 
-Developed as part of a Hackathon project.
+Developed collaboratively during a hackathon.
+
+Contributions included:
+
+- Frontend Development
+- Backend Development
+- API Design
+- Database Design
+- Authentication
+- Business Rules Engine
+- Dashboard Development
+- Deployment
+- Documentation
 
 ---
 
 # 📄 License
 
-This project is intended for educational and hackathon purposes.
+Developed for educational and hackathon purposes.
+
+---
+
+⭐ If you found this project interesting, consider starring the repository.
