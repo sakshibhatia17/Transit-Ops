@@ -14,9 +14,12 @@ const [loading, setLoading] = useState(false);
 
     const response = await login(email, password);
 
-    localStorage.setItem("token", response.data.token);
+const { token, data } = response.data;
 
-    navigate("/dashboard");
+localStorage.setItem("token", token);
+localStorage.setItem("user", JSON.stringify(data.user));
+
+navigate("/dashboard");
   } catch (error) {
     alert("Invalid email or password");
     console.error(error);
