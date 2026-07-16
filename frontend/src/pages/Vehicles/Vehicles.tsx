@@ -12,49 +12,57 @@ import {
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import type { Vehicle } from "../../types/vehicle";
+import { getVehicles } from "../../api/vehicles";
 
-const mockVehicles = [
-  {
-    regNo: "MP20AB1234",
-    name: "Truck-12",
-    type: "Truck",
-    capacity: "5 Ton",
-    status: "Available",
-  },
-  {
-    regNo: "MP20CD5678",
-    name: "Van-05",
-    type: "Van",
-    capacity: "2 Ton",
-    status: "On Trip",
-  },
-  {
-    regNo: "MP20EF9012",
-    name: "Mini-08",
-    type: "Mini Truck",
-    capacity: "1 Ton",
-    status: "In Shop",
-  },
-];
 
 function badge(status: string) {
   switch (status) {
-    case "Available":
+    case "AVAILABLE":
       return "bg-green-100 text-green-700";
-    case "On Trip":
+
+    case "ON_TRIP":
       return "bg-blue-100 text-blue-700";
-    default:
+
+    case "IN_SHOP":
       return "bg-yellow-100 text-yellow-700";
+
+    case "RETIRED":
+      return "bg-red-100 text-red-700";
+
+    default:
+      return "bg-slate-100 text-slate-700";
   }
 }
 
 function Vehicles() {
-    const [vehicles, setVehicles] = useState<Vehicle[]>([]);
+  const [vehicles, setVehicles] = useState<Vehicle[]>([]);
 
-    useEffect(() => {
-  // TODO: Replace with API call when backend is ready
-  setVehicles(mockVehicles);
-}, []);
+  const totalFleet = vehicles.length;
+
+  const availableVehicles = vehicles.filter(
+    (v) => v.status === "AVAILABLE",
+  ).length;
+
+  const onTripVehicles = vehicles.filter((v) => v.status === "ON_TRIP").length;
+
+  const inShopVehicles = vehicles.filter((v) => v.status === "IN_SHOP").length;
+
+  useEffect(() => {
+    const fetchVehicles = async () => {
+      try {
+        const data = await getVehicles();
+
+        console.log("Vehicles:", data);
+
+        setVehicles(data);
+      } catch (error) {
+        console.error("Failed to fetch vehicles:", error);
+      }
+    };
+
+    fetchVehicles();
+  }, []);
+
   return (
     <DashboardLayout>
       <div className="space-y-6">
@@ -62,7 +70,9 @@ function Vehicles() {
         <div className="flex justify-between items-center">
           <div>
             <h1 className="text-3xl font-bold">Vehicle Management</h1>
-            <p className="text-slate-500 dark:text-slate-400">Monitor and manage your fleet.</p>
+            <p className="text-slate-500 dark:text-slate-400">
+              Monitor and manage your fleet.
+            </p>
           </div>
 
           <button className="flex items-center gap-2 bg-[#22577A] text-white px-5 py-2 rounded-lg hover:bg-[#1A4761]">
@@ -76,22 +86,22 @@ function Vehicles() {
           {[
             {
               title: "Total Fleet",
-              value: "128",
+              value: totalFleet,
               icon: Truck,
             },
             {
               title: "Available",
-              value: "96",
+              value: availableVehicles,
               icon: CheckCircle,
             },
             {
               title: "On Trip",
-              value: "24",
+              value: onTripVehicles,
               icon: Route,
             },
             {
               title: "In Shop",
-              value: "8",
+              value: inShopVehicles,
               icon: Wrench,
             },
           ].map(({ title, value, icon: Icon }, index) => (
@@ -158,13 +168,13 @@ function Vehicles() {
               <tbody>
                 {vehicles.map((vehicle) => (
                   <tr
-                    key={vehicle.regNo}
+                    key={vehicle.id}
                     className="border-t border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 dark:bg-slate-800 transition-colors"
                   >
-                    <td className="p-4">{vehicle.regNo}</td>
-                    <td>{vehicle.name}</td>
+                    <td className="p-4">{vehicle.registrationNo}</td>
+                    <td>{vehicle.model}</td>
                     <td>{vehicle.type}</td>
-                    <td>{vehicle.capacity}</td>
+                    <td>{vehicle.maxLoadCapacity} kg</td>
 
                     <td>
                       <span
@@ -179,11 +189,17 @@ function Vehicles() {
                     <td>
                       <div className="flex justify-center items-center gap-3">
                         <button className="p-2 rounded-full hover:bg-slate-100 transition">
-                          <Eye size={18} className="text-slate-500 dark:text-slate-400" />
+                          <Eye
+                            size={18}
+                            className="text-slate-500 dark:text-slate-400"
+                          />
                         </button>
 
                         <button className="p-2 rounded-full hover:bg-slate-100 transition">
-                          <Pencil size={18} className="text-slate-500 dark:text-slate-400" />
+                          <Pencil
+                            size={18}
+                            className="text-slate-500 dark:text-slate-400"
+                          />
                         </button>
 
                         <button className="p-2 rounded-full text-red-500 hover:bg-red-50 transition focus:outline-none">
@@ -198,7 +214,9 @@ function Vehicles() {
           </div>
 
           <div className="flex justify-between items-center border-t border-slate-200 dark:border-slate-700 p-4">
-            <p className="text-sm text-slate-500 dark:text-slate-400">Showing 1–3 of 3 vehicles</p>
+            <p className="text-sm text-slate-500 dark:text-slate-400">
+  Showing {vehicles.length} vehicle{vehicles.length !== 1 ? "s" : ""}
+</p>
 
             <div className="flex gap-2">
               <button className="border rounded-lg px-4 py-2 hover:bg-slate-100">

@@ -1,8 +1,12 @@
 export interface Vehicle {
-  id?: string;
-  regNo: string;
-  name: string;
+  id: string;
+  registrationNo: string;
+  model: string;
   type: string;
-  capacity: string;
-  status: string;
+  maxLoadCapacity: number;
+  odometer: number;
+  acquisitionCost: number;
+  status: "AVAILABLE" | "ON_TRIP" | "IN_SHOP" | "RETIRED";
+  createdAt: string;
+  updatedAt: string;
 }

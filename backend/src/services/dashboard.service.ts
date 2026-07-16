@@ -15,6 +15,7 @@ export class DashboardService {
       completedTrips,
       fuelCostResult,
       maintenanceCostResult,
+      recentTrips,
     ] = await Promise.all([
       prisma.vehicle.count(),
       prisma.vehicle.count({ where: { status: "AVAILABLE" } }),
@@ -28,21 +29,35 @@ export class DashboardService {
       prisma.trip.count({ where: { status: "COMPLETED" } }),
       prisma.fuelLog.aggregate({ _sum: { cost: true } }),
       prisma.maintenanceLog.aggregate({ _sum: { cost: true } }),
+
+      prisma.trip.findMany({
+        take: 5,
+        orderBy: {
+          createdAt: "desc",
+        },
+        include: {
+          vehicle: true,
+          driver: true,
+        },
+      }),
     ]);
 
     return {
-      totalVehicles,
-      availableVehicles,
-      vehiclesOnTrip,
-      vehiclesInMaintenance,
-      totalDrivers,
-      availableDrivers,
-      driversOnTrip,
-      totalTrips,
-      activeTrips,
-      completedTrips,
-      totalFuelCost: fuelCostResult._sum.cost || 0,
-      totalMaintenanceCost: maintenanceCostResult._sum.cost || 0,
+      stats: {
+        totalVehicles,
+        availableVehicles,
+        vehiclesOnTrip,
+        vehiclesInMaintenance,
+        totalDrivers,
+        availableDrivers,
+        driversOnTrip,
+        totalTrips,
+        activeTrips,
+        completedTrips,
+        totalFuelCost: fuelCostResult._sum.cost || 0,
+        totalMaintenanceCost: maintenanceCostResult._sum.cost || 0,
+      },
+      recentTrips,
     };
   }
 }
