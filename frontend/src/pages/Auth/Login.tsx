@@ -24,13 +24,9 @@ console.log("TOKEN:", token);
 console.log("USER:", user);
 
 navigate("/dashboard");
-  } catch (error) {
-    alert("Invalid email or password");
-    console.error(error);
-  } finally {
-    setLoading(false);
-  }
-};
+} catch (error: any) {
+  alert(error.message || "Invalid email or password");
+}
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-slate-100">
