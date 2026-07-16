@@ -1,9 +1,9 @@
 import express from 'express';
 import type { Request, Response } from 'express';
-import { PrismaClient, TripStatus } from '@prisma/client';
+import { TripStatus } from "@prisma/client";
+import { prisma } from "../lib/prisma.js";
 
 const router = express.Router();
-const prisma = new PrismaClient();
 
 // Get real-time aggregated metrics for Bhavya's frontend graphs
 router.get('/summary', async (_req: Request, res: Response) => {

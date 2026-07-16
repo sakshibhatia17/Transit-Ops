@@ -7,5 +7,18 @@ export const login = (email: string, password: string) =>
     password,
   });
 
+export const register = (
+  name: string,
+  email: string,
+  password: string,
+  role: string
+) =>
+  api.post(API_ENDPOINTS.AUTH.REGISTER, {
+    name,
+    email,
+    password,
+    role,
+  });
+
 export const getProfile = () =>
   api.get(API_ENDPOINTS.AUTH.ME);

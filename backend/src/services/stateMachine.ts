@@ -1,8 +1,7 @@
-import { PrismaClient, TripStatus, VehicleStatus, DriverStatus } from '@prisma/client';
+import { TripStatus, VehicleStatus, DriverStatus } from "@prisma/client";
+import { prisma } from "../lib/prisma.js";
 import { AppError } from '../utils/AppError.js';
 import { validateVehicleDispatch, validateDriverAssignment } from '../utils/businessRules.js';
-
-const prisma = new PrismaClient();
 
 export class StateMachineService {
   /**

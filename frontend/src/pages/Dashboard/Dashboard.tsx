@@ -1,21 +1,41 @@
 import DashboardLayout from "../../layouts/DashboardLayout";
 import KpiCard from "../../components/dashboard/KpiCard";
+import { useEffect, useState } from "react";
+import { getDashboardData } from "../../api/dashboard";
 
 function Dashboard() {
-  const trips = [
-    { id: "TR001", vehicle: "VAN-05", driver: "Alex", status: "On Trip", eta: "45 min" },
-    { id: "TR002", vehicle: "TRK-12", driver: "John", status: "Completed", eta: "-" },
-    { id: "TR003", vehicle: "MINI-08", driver: "Priya", status: "Dispatched", eta: "1h 10m" },
-    { id: "TR004", vehicle: "-", driver: "-", status: "Draft", eta: "Awaiting Vehicle" },
-  ];
+  const [stats, setStats] = useState<any>(null);
+  const [recentTrips, setRecentTrips] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchDashboard = async () => {
+      try {
+        const data = await getDashboardData();
+
+        console.log("Dashboard Data:", data);
+
+        setStats(data.stats);
+
+        setRecentTrips(data.recentTrips);
+      } catch (error) {
+        console.error("Failed to fetch dashboard stats:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchDashboard();
+  }, []);
 
   return (
     <DashboardLayout>
       <div className="space-y-6">
-
         {/* Heading */}
         <div>
-          <h1 className="text-3xl font-bold text-slate-800 dark:text-white">Dashboard</h1>
+          <h1 className="text-3xl font-bold text-slate-800 dark:text-white">
+            Dashboard
+          </h1>
           <p className="text-slate-500 dark:text-slate-400">
             Monitor your fleet operations in real time.
           </p>
@@ -38,20 +58,36 @@ function Dashboard() {
 
         {/* KPI */}
         <div className="grid grid-cols-4 gap-5">
-          <KpiCard title="Active Vehicles" value="53" borderColor="border-blue-500" />
-          <KpiCard title="Available Vehicles" value="42" borderColor="border-green-500" />
-          <KpiCard title="Active Trips" value="18" borderColor="border-yellow-500" />
-          <KpiCard title="Drivers On Duty" value="26" borderColor="border-cyan-500" />
+          <KpiCard
+            title="Active Vehicles"
+            value={loading ? "..." : String(stats?.vehiclesOnTrip ?? 0)}
+            borderColor="border-blue-500"
+          />
+
+          <KpiCard
+            title="Available Vehicles"
+            value={loading ? "..." : String(stats?.availableVehicles ?? 0)}
+            borderColor="border-green-500"
+          />
+
+          <KpiCard
+            title="Active Trips"
+            value={loading ? "..." : String(stats?.activeTrips ?? 0)}
+            borderColor="border-yellow-500"
+          />
+
+          <KpiCard
+            title="Drivers On Duty"
+            value={loading ? "..." : String(stats?.driversOnTrip ?? 0)}
+            borderColor="border-cyan-500"
+          />
         </div>
 
         {/* Bottom Section */}
         <div className="grid grid-cols-3 gap-6">
-
           {/* Recent Trips */}
           <div className="col-span-2 bg-white dark:bg-slate-900 rounded-xl shadow transition-colors p-5">
-            <h2 className="text-xl font-semibold mb-4">
-              Recent Trips
-            </h2>
+            <h2 className="text-xl font-semibold mb-4">Recent Trips</h2>
 
             <table className="w-full">
               <thead className="text-slate-500 dark:text-slate-400 text-sm">
@@ -65,13 +101,20 @@ function Dashboard() {
               </thead>
 
               <tbody>
-                {trips.map((trip) => (
-                  <tr key={trip.id} className="border-t border-slate-200 dark:border-slate-700">
-                    <td className="py-3">{trip.id}</td>
-                    <td>{trip.vehicle}</td>
-                    <td>{trip.driver}</td>
+                {recentTrips.map((trip: any) => (
+                  <tr
+                    key={trip.id}
+                    className="border-t border-slate-200 dark:border-slate-700"
+                  >
+                    <td className="py-3">{trip.id.slice(0, 8)}</td>
+
+                    <td>{trip.vehicle?.registrationNo ?? "-"}</td>
+
+                    <td>{trip.driver?.name ?? "-"}</td>
+
                     <td>{trip.status}</td>
-                    <td>{trip.eta}</td>
+
+                    <td>{trip.destination ?? "-"}</td>
                   </tr>
                 ))}
               </tbody>
@@ -80,34 +123,49 @@ function Dashboard() {
 
           {/* Vehicle Status */}
           <div className="bg-white dark:bg-slate-900 rounded-xl shadow transition-colors p-5">
-            <h2 className="text-xl font-semibold mb-5">
-              Vehicle Status
-            </h2>
+            <h2 className="text-xl font-semibold mb-5">Vehicle Status</h2>
 
             {[
-              ["Available", "70%"],
-              ["On Trip", "35%"],
-              ["In Shop", "15%"],
-              ["Retired", "5%"],
-            ].map(([label, width]) => (
+              {
+                label: "Available",
+                count: stats?.availableVehicles ?? 0,
+                percent: stats?.totalVehicles
+                  ? (stats.availableVehicles / stats.totalVehicles) * 100
+                  : 0,
+              },
+              {
+                label: "On Trip",
+                count: stats?.vehiclesOnTrip ?? 0,
+                percent: stats?.totalVehicles
+                  ? (stats.vehiclesOnTrip / stats.totalVehicles) * 100
+                  : 0,
+              },
+              {
+                label: "In Shop",
+                count: stats?.vehiclesInMaintenance ?? 0,
+                percent: stats?.totalVehicles
+                  ? (stats.vehiclesInMaintenance / stats.totalVehicles) * 100
+                  : 0,
+              },
+            ].map(({ label, count, percent }) => (
               <div key={label} className="mb-5">
                 <div className="flex justify-between mb-1">
                   <span>{label}</span>
-                  <span>{width}</span>
+                  <span>
+  {count} ({percent.toFixed(0)}%)
+</span>
                 </div>
 
                 <div className="h-2 bg-slate-200 rounded-full">
                   <div
                     className="h-2 rounded-full bg-[#22577A]"
-                    style={{ width }}
+                    style={{ width: `${percent}%` }}
                   />
                 </div>
               </div>
             ))}
           </div>
-
         </div>
-
       </div>
     </DashboardLayout>
   );

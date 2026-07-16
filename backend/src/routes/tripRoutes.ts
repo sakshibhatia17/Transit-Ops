@@ -1,10 +1,9 @@
 import express from 'express';
 import type { Request, Response } from 'express';
-import { PrismaClient } from '@prisma/client';
+import { prisma } from "../lib/prisma.js";
 import { StateMachineService } from '../services/stateMachine.js';
 
 const router = express.Router();
-const prisma = new PrismaClient();
 
 // Create Trip (Draft)
 router.post('/', async (req: Request, res: Response) => {

@@ -1,5 +1,7 @@
 import api from "./axios";
 import { API_ENDPOINTS } from "../constants/apiEndpoints";
 
-export const getDashboardStats = () =>
-  api.get(API_ENDPOINTS.DASHBOARD.STATS);
+export const getDashboardData = async () => {
+  const response = await api.get(API_ENDPOINTS.DASHBOARD.STATS);
+  return response.data.data;
+};
