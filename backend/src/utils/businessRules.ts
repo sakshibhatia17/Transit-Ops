@@ -4,25 +4,34 @@ import { AppError } from "./AppError.js";
 /**
  * Validates if a vehicle transition is allowed.
  */
-export function validateVehicleStatusTransition(currentStatus: VehicleStatus, nextStatus: VehicleStatus): void {
+export function validateVehicleStatusTransition(
+  currentStatus: VehicleStatus,
+  nextStatus: VehicleStatus,
+): void {
   if (currentStatus === nextStatus) return;
 
   const validTransitions: Record<VehicleStatus, VehicleStatus[]> = {
-    AVAILABLE: ["ON_TRIP", "IN_SHOP"],
+    AVAILABLE: ["ON_TRIP", "IN_SHOP", "RETIRED"],
     ON_TRIP: ["AVAILABLE"],
-    IN_SHOP: ["AVAILABLE"],
+    IN_SHOP: ["AVAILABLE", "RETIRED"],
     RETIRED: [],
   };
 
   if (!validTransitions[currentStatus]?.includes(nextStatus)) {
-    throw new AppError(`Invalid vehicle status transition from ${currentStatus} to ${nextStatus}.`, 400);
+    throw new AppError(
+      `Invalid vehicle status transition from ${currentStatus} to ${nextStatus}.`,
+      400,
+    );
   }
 }
 
 /**
  * Validates if a driver transition is allowed.
  */
-export function validateDriverStatusTransition(currentStatus: DriverStatus, nextStatus: DriverStatus): void {
+export function validateDriverStatusTransition(
+  currentStatus: DriverStatus,
+  nextStatus: DriverStatus,
+): void {
   if (currentStatus === nextStatus) return;
 
   const validTransitions: Record<DriverStatus, DriverStatus[]> = {
@@ -33,7 +42,10 @@ export function validateDriverStatusTransition(currentStatus: DriverStatus, next
   };
 
   if (!validTransitions[currentStatus]?.includes(nextStatus)) {
-    throw new AppError(`Invalid driver status transition from ${currentStatus} to ${nextStatus}.`, 400);
+    throw new AppError(
+      `Invalid driver status transition from ${currentStatus} to ${nextStatus}.`,
+      400,
+    );
   }
 }
 
@@ -51,16 +63,25 @@ export function validateDriverLicense(expiryDate: Date | string): void {
  */
 export function validateVehicleDispatch(status: VehicleStatus): void {
   if (status === "ON_TRIP" || status === "IN_SHOP" || status === "RETIRED") {
-    throw new AppError(`Vehicle cannot be dispatched while in ${status} status.`, 400);
+    throw new AppError(
+      `Vehicle cannot be dispatched while in ${status} status.`,
+      400,
+    );
   }
 }
 
 /**
  * Validates if a driver can be assigned to a trip.
  */
-export function validateDriverAssignment(status: DriverStatus, expiryDate: Date | string): void {
+export function validateDriverAssignment(
+  status: DriverStatus,
+  expiryDate: Date | string,
+): void {
   if (status === "ON_TRIP" || status === "SUSPENDED") {
-    throw new AppError(`Driver cannot be assigned while in ${status} status.`, 400);
+    throw new AppError(
+      `Driver cannot be assigned while in ${status} status.`,
+      400,
+    );
   }
   validateDriverLicense(expiryDate);
 }

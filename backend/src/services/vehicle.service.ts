@@ -28,6 +28,7 @@ interface VehicleListQuery {
   limit: number;
   status?: VehicleStatus | undefined;
   search?: string | undefined;
+  type?: string | undefined;
 }
 
 const vehicleSelect = {
@@ -56,7 +57,7 @@ export class VehicleService {
     if (existing) {
       throw new AppError(
         `A vehicle with registration number "${params.registrationNo}" already exists.`,
-        409
+        409,
       );
     }
 
@@ -71,13 +72,16 @@ export class VehicleService {
    * Supports optional status filter and search by registrationNo or model.
    */
   async findAll(query: VehicleListQuery) {
-    const { page, limit, status, search } = query;
+    const { page, limit, status, search, type } = query;
     const skip = (page - 1) * limit;
 
     const where: Record<string, unknown> = {};
 
     if (status) {
       where.status = status;
+    }
+    if (type) {
+      where.type = type;
     }
 
     if (search) {
@@ -87,16 +91,30 @@ export class VehicleService {
       ];
     }
 
-    const [vehicles, total] = await Promise.all([
-      prisma.vehicle.findMany({
-        where,
-        select: vehicleSelect,
-        skip,
-        take: limit,
-        orderBy: { createdAt: "desc" },
-      }),
-      prisma.vehicle.count({ where }),
-    ]);
+    const [vehicles, total, totalFleet, available, onTrip, inShop, retired] =
+      await Promise.all([
+        prisma.vehicle.findMany({
+          where,
+          select: vehicleSelect,
+          skip,
+          take: limit,
+          orderBy: { createdAt: "desc" },
+        }),
+        prisma.vehicle.count({ where }),
+        prisma.vehicle.count(),
+        prisma.vehicle.count({
+          where: { status: "AVAILABLE" },
+        }),
+        prisma.vehicle.count({
+          where: { status: "ON_TRIP" },
+        }),
+        prisma.vehicle.count({
+          where: { status: "IN_SHOP" },
+        }),
+        prisma.vehicle.count({
+          where: { status: "RETIRED" },
+        }),
+      ]);
 
     return {
       vehicles,
@@ -104,8 +122,15 @@ export class VehicleService {
         total,
         page,
         limit,
-        totalPages: Math.ceil(total / limit),
+        totalPages: Math.max(1, Math.ceil(total / limit)),
       },
+      stats: {
+  totalFleet,
+  available,
+  onTrip,
+  inShop,
+  retired,
+}
     };
   }
 
@@ -156,7 +181,10 @@ export class VehicleService {
     }
 
     // Check uniqueness only if registrationNo is changing
-    if (params.registrationNo && params.registrationNo !== vehicle.registrationNo) {
+    if (
+      params.registrationNo &&
+      params.registrationNo !== vehicle.registrationNo
+    ) {
       const duplicate = await prisma.vehicle.findUnique({
         where: { registrationNo: params.registrationNo },
       });
@@ -164,7 +192,7 @@ export class VehicleService {
       if (duplicate) {
         throw new AppError(
           `A vehicle with registration number "${params.registrationNo}" already exists.`,
-          409
+          409,
         );
       }
     }
@@ -190,11 +218,20 @@ export class VehicleService {
     if (vehicle.status === "ON_TRIP") {
       throw new AppError(
         "Cannot delete a vehicle that is currently on a trip.",
-        400
+        400,
       );
     }
 
-    await prisma.vehicle.delete({ where: { id } });
+    try {
+      await prisma.vehicle.delete({
+        where: { id },
+      });
+    } catch (error: any) {
+      throw new AppError(
+        "Cannot delete this vehicle because it has associated trips.",
+        400,
+      );
+    }
   }
 }
 
