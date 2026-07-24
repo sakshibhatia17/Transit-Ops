@@ -1,7 +1,10 @@
 import type { DriverStatus } from "@prisma/client";
 import { prisma } from "../lib/prisma.js";
 import { AppError } from "../utils/AppError.js";
-import { validateDriverStatusTransition, validateDriverLicense } from "../utils/businessRules.js";
+import {
+  validateDriverStatusTransition,
+  validateDriverLicense,
+} from "../utils/businessRules.js";
 
 interface CreateDriverParams {
   name: string;
@@ -58,7 +61,7 @@ export class DriverService {
     if (existing) {
       throw new AppError(
         `A driver with license number "${params.licenseNumber}" already exists.`,
-        409
+        409,
       );
     }
 
@@ -165,7 +168,7 @@ export class DriverService {
       if (duplicate) {
         throw new AppError(
           `A driver with license number "${params.licenseNumber}" already exists.`,
-          409
+          409,
         );
       }
     }
@@ -188,9 +191,21 @@ export class DriverService {
     }
 
     if (driver.status === "ON_TRIP") {
-      throw new AppError("Cannot delete a driver that is currently on a trip.", 400);
+      throw new AppError(
+        "Cannot delete a driver that is currently on a trip.",
+        400,
+      );
     }
 
+    const trips = await prisma.trip.count({
+      where: {
+        driverId: id,
+      },
+    });
+
+    if (trips > 0) {
+      throw new AppError("Cannot delete a driver who has trip history.", 400);
+    }
     await prisma.driver.delete({ where: { id } });
   }
 }
