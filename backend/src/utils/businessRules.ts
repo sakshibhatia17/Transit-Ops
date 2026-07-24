@@ -35,10 +35,10 @@ export function validateDriverStatusTransition(
   if (currentStatus === nextStatus) return;
 
   const validTransitions: Record<DriverStatus, DriverStatus[]> = {
-    AVAILABLE: ["ON_TRIP", "SUSPENDED"],
-    ON_TRIP: ["AVAILABLE"],
-    SUSPENDED: [],
-    OFF_DUTY: [],
+    AVAILABLE: ["ON_TRIP", "OFF_DUTY", "SUSPENDED"],
+    ON_TRIP: ["AVAILABLE", "OFF_DUTY"],
+    OFF_DUTY: ["AVAILABLE", "ON_TRIP"],
+    SUSPENDED: ["AVAILABLE"],
   };
 
   if (!validTransitions[currentStatus]?.includes(nextStatus)) {

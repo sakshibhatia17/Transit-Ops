@@ -1,8 +1,12 @@
 export interface Driver {
-  id?: string;
+  id: string;
   name: string;
-  license: string;
-  phone: string;
-  experience: string;
-  status: string;
+  licenseNumber: string;
+  licenseCategory: string;
+  licenseExpiry: string;
+  contactNumber: string;
+  safetyScore: number;
+  status: "AVAILABLE" | "ON_TRIP" | "OFF_DUTY";
+  createdAt: string;
+  updatedAt: string;
 }
